@@ -38,7 +38,7 @@ def crear_chunks(documentos, chunk_size=1000, chunk_overlap=200):
     return splitter.split_documents(documentos)
 
 def construir_vectorstore(chunks, api_key):
-    embeddings = GoogleGenerativeAIEmbeddings(model="text-embedding-004", google_api_key=api_key)
+    embeddings = GoogleGenerativeAIEmbeddings(model="text-embedding-004", google_api_key=api_key, client_options={"api_endpoint": "generativelanguage.googleapis.com"}, transport="rest")
     return FAISS.from_documents(chunks, embeddings)
 
 def inicializar_rag(api_key, docs_path="docs"):
