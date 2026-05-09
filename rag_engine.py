@@ -1,16 +1,13 @@
 import os
 import glob
-import google.generativeai as genai
-import numpy as np
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import FakeEmbeddings
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from langchain_core.embeddings import Embeddings
 
 SYSTEM_PROMPT = """Eres el Asistente Tecnico de SAYERCEN-D, empresa especializada en biodigestores y PTAR.
 Responde UNICAMENTE con base en el siguiente contexto. Si no esta en el contexto, di que no tienes esa informacion.
@@ -21,21 +18,6 @@ Contexto: {context}
 Pregunta: {question}
 
 Respuesta:"""
-
-class GeminiEmbeddings(Embeddings):
-    def __init__(self, api_key):
-        genai.configure(api_key=api_key)
-
-    def embed_documents(self, texts):
-        result = []
-        for text in texts:
-            r = genai.embed_content(model="models/embedding-001", content=text)
-            result.append(r["embedding"])
-        return result
-
-    def embed_query(self, text):
-        r = genai.embed_content(model="models/embedding-001", content=text)
-        return r["embedding"]
 
 def cargar_documentos(docs_path="docs"):
     if not os.path.exists(docs_path):
@@ -59,7 +41,11 @@ def crear_chunks(documentos, chunk_size=1000, chunk_overlap=200):
 def inicializar_rag(api_key, docs_path="docs"):
     documentos = cargar_documentos(docs_path)
     chunks = crear_chunks(documentos)
-    embeddings = GeminiEmbeddings(api_key=api_key)
+    embeddings = HuggingFaceEmbeddings(
+        model_name="all-MiniLM-L6-v2",
+        model_kwargs={"device": "cpu"},
+        encode_kwargs={"normalize_embeddings": True}
+    )
     vectorstore = FAISS.from_documents(chunks, embeddings)
     llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=api_key, temperature=0.2)
     prompt = PromptTemplate(input_variables=["context", "question"], template=SYSTEM_PROMPT)
