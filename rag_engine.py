@@ -29,12 +29,12 @@ class GeminiEmbeddings(Embeddings):
     def embed_documents(self, texts):
         result = []
         for text in texts:
-            r = genai.embed_content(model="models/text-embedding-004", content=text, task_type="retrieval_document")
+            r = genai.embed_content(model="models/embedding-001", content=text)
             result.append(r["embedding"])
         return result
 
     def embed_query(self, text):
-        r = genai.embed_content(model="models/text-embedding-004", content=text, task_type="retrieval_query")
+        r = genai.embed_content(model="models/embedding-001", content=text)
         return r["embedding"]
 
 def cargar_documentos(docs_path="docs"):
