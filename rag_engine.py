@@ -47,7 +47,7 @@ def inicializar_rag(api_key, docs_path="docs"):
         encode_kwargs={"normalize_embeddings": True}
     )
     vectorstore = FAISS.from_documents(chunks, embeddings)
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=api_key, temperature=0.2)
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=api_key, temperature=0.2)
     prompt = PromptTemplate(input_variables=["context", "question"], template=SYSTEM_PROMPT)
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
     chain = ({"context": retriever, "question": RunnablePassthrough()} | prompt | llm | StrOutputParser())
