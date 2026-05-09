@@ -1,0 +1,22 @@
+# Secrets — NUNCA subir a GitHub
+.streamlit/secrets.toml
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Cache de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Cache de FAISS (se regenera automáticamente)
+faiss_index/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Variables de entorno
+.env
