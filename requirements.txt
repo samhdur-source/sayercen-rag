@@ -1,9 +1,6 @@
 streamlit
-langchain-community
-langchain-google-genai
+langchain-google-genai==2.0.4
 langchain-text-splitters
+langchain-community
 faiss-cpu
 pypdf
-sentence-transformers
-torch
-transformers
