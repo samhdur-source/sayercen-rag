@@ -38,8 +38,12 @@ def crear_chunks(documentos, chunk_size=1000, chunk_overlap=200):
     splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     return splitter.split_documents(documentos)
 
-def construir_vectorstore(chunks):
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+def construir_vectorstore(chunks, api_key):
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/text-embedding-004",
+        google_api_key=api_key,
+        task_type="retrieval_document"
+    )
     return FAISS.from_documents(chunks, embeddings)
 
 def inicializar_rag(api_key, docs_path="docs"):
