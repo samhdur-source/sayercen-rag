@@ -19,8 +19,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_community.vectorstores import FAISS
 from langchain.chains import ConversationalRetrievalChain
-from langchain.memory import ConversationBufferMemory
-from langchain.prompts import PromptTemplate
+from langchain_community.chat_message_histories import ChatMessageHistory`nfrom langchain.memory import ConversationBufferMemory
+from langchain_core.prompts import PromptTemplate
 
 
 # ── Prompt del sistema ──────────────────────────────────────────────────────
@@ -212,3 +212,4 @@ def consultar(cadena: ConversationalRetrievalChain, pregunta: str) -> dict:
 
     resultado = cadena({"question": pregunta})
     return resultado
+
