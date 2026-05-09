@@ -3,7 +3,6 @@ import glob
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -49,7 +48,7 @@ def construir_vectorstore(chunks, api_key):
 def inicializar_rag(api_key, docs_path="docs"):
     documentos = cargar_documentos(docs_path)
     chunks = crear_chunks(documentos)
-    vectorstore = construir_vectorstore(chunks)
+    vectorstore = construir_vectorstore(chunks, api_key)
     llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=api_key, temperature=0.2)
     prompt = PromptTemplate(input_variables=["context", "question"], template=SYSTEM_PROMPT)
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
